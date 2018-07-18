@@ -7,7 +7,11 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    titleBarStyle: 'hidden'
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000')
@@ -18,9 +22,16 @@ const template = [
     submenu: [
       {
         label: 'Open File',
-        accelerator: 'CmdOrCtrl+O',
+        accelerator: 'CmdOrCtrl+F',
         click() {
           openFile();
+        }
+      },
+      {
+        label: 'Open Directory',
+        accelerator: 'CmdOrCtrl+O',
+        click() {
+          openDir();
         }
       },
       {
@@ -186,4 +197,17 @@ function openFile() {
   // Send fileContent to renderer
   mainWindow.webContents.send('new-file', fileContent);
 
+}
+
+// Opens Directory
+function openDir() {
+  const directory = dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory'],
+  });
+
+  if(!directory) return;
+
+  fs.readdir(directory[0], (err, files) => {
+    console.log(files);
+  })
 }
