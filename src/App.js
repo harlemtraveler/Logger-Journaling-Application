@@ -7,27 +7,63 @@ import 'brace/mode/markdown';
 import 'brace/theme/dracula';
 import './App.css';
 
+const settings = window.require('electron-settings');
 const { ipcRenderer } = window.require('electron');
+const fs = window.require('fs');
 
 class App extends Component {
   state = {
-    loadedFile: ''
+    loadedFile: '',
+    filesData: [],
+    directory: settings.get('directory') || null
   }
   constructor() {
     super();
+
+    // On Load
+    const directory = settings.get('directory')
+    if (directory) {
+      this.loadAndReadFiles(directory);
+    }
 
     ipcRenderer.on('new-file', (event, fileContent) => {
       this.setState({
         loadedFile: fileContent
       });
     });
+
+
+    ipcRenderer.on('new-dir', (event, directory) => {
+      this.setState({
+        directory
+      });
+      settings.set('directory', directory);
+      this.loadAndReadFiles(directory);
+    });
+  }
+
+  loadAndReadFiles = directory => {
+    fs.readdir(directory, (err, files) => {
+      const filteredFiles = files.filter(file => file.includes('.md'));
+      const filesData = filteredFiles.map(file => ({
+        path: `${directory}/${file}`
+      }));
+      this.setState({
+        filesData
+      });
+    });
+
   }
 
   render() {
     return (
       <div className="App">
         <Header>Logger</Header>
+        {this.state.directory ? (
         <Split>
+          <div>
+            {this.state.filesData.map(file => <h1>{file.path}</h1>)}
+          </div>
           <CodeWindow>
             <AceEditor
               mode="markdown"
@@ -44,7 +80,13 @@ class App extends Component {
           <RenderedWindow>
             <Markdown>{this.state.loadedFile}</Markdown>
           </RenderedWindow>
-      </Split>
+        </Split>
+        ) : (
+          <LoadingMessage>
+            <h1>Press Command-or-Control+O to open directory</h1>
+          </LoadingMessage>
+        )}
+
       </div>
     );
   }
@@ -65,6 +107,15 @@ const Header = styled.div`
   width: 100%;
   z-index: 10;
   -webkit-app-region: drag;
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: #191324;
+  height: 100vh;
 `;
 
 const Split = styled.div`

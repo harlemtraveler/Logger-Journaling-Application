@@ -206,8 +206,6 @@ function openDir() {
   });
 
   if(!directory) return;
-
-  fs.readdir(directory[0], (err, files) => {
-    console.log(files);
-  })
+  const dir = directory[0];
+    mainWindow.webContents.send('new-dir', dir);
 }
