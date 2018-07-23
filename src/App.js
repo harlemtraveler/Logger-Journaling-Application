@@ -94,7 +94,7 @@ class App extends Component {
         <Split>
           <FilesWindow>
             {this.state.filesData.map((file, index) => (
-              <button onClick={() => this.loadFile(index)}>{file.path}</button>
+              <button onClick={this.changeFile(index)}>{file.path}</button>
             ))}
           </FilesWindow>
           <CodeWindow>
