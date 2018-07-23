@@ -15,6 +15,7 @@ class App extends Component {
   state = {
     loadedFile: '',
     filesData: [],
+    activeIndex: 0,
     directory: settings.get('directory') || null
   }
   constructor() {
@@ -48,22 +49,54 @@ class App extends Component {
       const filesData = filteredFiles.map(file => ({
         path: `${directory}/${file}`
       }));
-      this.setState({
-        filesData
-      });
+      this.setState(
+        {
+          filesData
+        },
+        () => this.loadFile(0)
+      );
     });
 
   }
 
+  changeFile = index => () => {
+    const { activeIndex } = this.state;
+    if (index !== activeIndex) {
+      this.saveFile();
+      this.loadFile(index);
+    }
+  }
+
+  loadFile = index => {
+    const { filesData } = this.state;
+
+    const content = fs.readFileSync(filesData[index].path).toString();
+
+    this.setState({
+      loadedFile: content,
+      activeIndex: index
+    });
+  }
+
+  saveFile = () => {
+    const { activeIndex, loadedFile, filesData } = this.state;
+    fs.writeFile(filesData[activeIndex].path, loadedFile, err => {
+      if (err) return console.log(err);
+      console.log('File Saved');
+    })
+  };
+
   render() {
     return (
-      <div className="App">
+      <AppWrap>
         <Header>Logger</Header>
         {this.state.directory ? (
         <Split>
-          <div>
-            {this.state.filesData.map(file => <h1>{file.path}</h1>)}
-          </div>
+          <FilesWindow>
+            {this.state.filesData.map((file, index) => (
+              <button onClick={() => this.loadFile(index)}>{file.path}</button>
+            ))}
+          </FilesWindow>
           <CodeWindow>
             <AceEditor
               mode="markdown"
@@ -87,12 +120,16 @@ class App extends Component {
           </LoadingMessage>
         )}
 
-      </div>
+      </AppWrap>
     );
   }
 }
 
 export default App;
+
+const AppWrap = styled.div`
+  margin-top: 23px;
+`;
 
 const Header = styled.div`
   background-color: #191324;
@@ -121,6 +158,23 @@ const LoadingMessage = styled.div`
 const Split = styled.div`
   display: flex;
   height: 100vh;
+`;
+
+const FilesWindow = styled.div`
+  background: #140f1d;
+  border-right: solid 1px #302b3a;
+  position: relative;
+  width: 20%;
+  &:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    box-shadow: -10px 0 20px rgba(0,0,0, 0.3) inset;
+  }
 `;
 
 const CodeWindow = styled.div`
