@@ -21,21 +21,18 @@ const template = [
     label: 'File',
     submenu: [
       {
-        label: 'Open File',
-        accelerator: 'CmdOrCtrl+F',
-        click() {
-          openFile();
-        }
-      },
-      {
-        label: 'Open Directory',
+        label: 'Open Folder',
         accelerator: 'CmdOrCtrl+O',
         click() {
           openDir();
         }
       },
       {
-        label: 'Open Folder'
+        label: 'Save File',
+        accelerator: 'CmdOrCtrl+S',
+        click() {
+          mainWindow.webContents.send('save-file');
+        }
       }
     ]
   },

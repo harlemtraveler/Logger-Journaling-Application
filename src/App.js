@@ -27,10 +27,8 @@ class App extends Component {
       this.loadAndReadFiles(directory);
     }
 
-    ipcRenderer.on('new-file', (event, fileContent) => {
-      this.setState({
-        loadedFile: fileContent
-      });
+    ipcRenderer.on('save-file', event => {
+      this.saveFile();
     });
 
 
@@ -87,14 +85,20 @@ class App extends Component {
   };
 
   render() {
+    const { activeIndex, filesData, directory, loadedFile } = this.state;
     return (
       <AppWrap>
         <Header>Logger</Header>
-        {this.state.directory ? (
+        {directory ? (
         <Split>
           <FilesWindow>
-            {this.state.filesData.map((file, index) => (
-              <button onClick={this.changeFile(index)}>{file.path}</button>
+            {filesData.map((file, index) => (
+              <FileButton
+                active={activeIndex === index}
+                onClick={this.changeFile(index)}
+              >
+                {file.path}
+              </FileButton>
             ))}
           </FilesWindow>
           <CodeWindow>
@@ -107,11 +111,11 @@ class App extends Component {
                 });
               }}
               name="markdown_editor"
-              value={this.state.loadedFile}
+              value={loadedFile}
             />
           </CodeWindow>
           <RenderedWindow>
-            <Markdown>{this.state.loadedFile}</Markdown>
+            <Markdown>{loadedFile}</Markdown>
           </RenderedWindow>
         </Split>
         ) : (
@@ -204,4 +208,23 @@ const RenderedWindow = styled.div`
   a {
     color: #e54b4b;
   }
+`;
+
+const FileButton = styled.button`
+  padding: 10px;
+  width: 100%;
+  background: #191324;
+  opacity: 0.4;
+  color: white;
+  border: none;
+  border-bottom: solid 1px #302b3a;
+  transition: 0.3s ease all;
+  &:hover {
+    opacity: 1;
+    border-left: solid 4px #82d8d8;
+  }
+  ${({active}) => active && `
+    opacity: 1;
+    border-left: solid 4px #82d8d8;
+  `}
 `;
