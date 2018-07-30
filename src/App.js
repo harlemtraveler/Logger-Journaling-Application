@@ -44,9 +44,15 @@ class App extends Component {
   loadAndReadFiles = directory => {
     fs.readdir(directory, (err, files) => {
       const filteredFiles = files.filter(file => file.includes('.md'));
-      const filesData = filteredFiles.map(file => ({
-        path: `${directory}/${file}`
-      }));
+      const filesData = filteredFiles.map(file => {
+        const date = file.substr(file.indexOf('_') + 1, file.indexOf('.') - file.indexOf('_') - 1);
+        return {
+          date,
+          path: `${directory}/${file}`,
+          title: file.substr(0, file.indexOf('_'))
+        };
+      });
+
       this.setState(
         {
           filesData
@@ -54,8 +60,7 @@ class App extends Component {
         () => this.loadFile(0)
       );
     });
-
-  }
+  };
 
   changeFile = index => () => {
     const { activeIndex } = this.state;
