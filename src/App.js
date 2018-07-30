@@ -18,6 +18,7 @@ class App extends Component {
     filesData: [],
     activeIndex: 0,
     newEntry: false,
+    newEntryName: '',
     directory: settings.get('directory') || null
   }
   constructor() {
@@ -101,8 +102,40 @@ class App extends Component {
     })
   };
 
+  newFile = e => {
+    // the '.preventDefault' method prevents the weird refresh whenever selected
+    e.preventDefault();
+    const { newEntryName, directory, filesData } = this.state;
+    const fileDate = dateFns.format(new Date(), 'MM-DD-YYYY');
+    const filePath = `${directory}/${newEntryName}_${fileDate}.md`;
+    fs.writeFile(filePath, '', err => {
+      if (err) return console.log(err);
+
+      filesData.unshift({
+        path: filePath,
+        date: fileDate,
+        title: newEntryName
+      });
+
+      this.setState({
+        newEntry: false,
+        newEntryName: '',
+        loadedFile: '',
+        filesData
+      })
+    });
+  }
+
   render() {
-    const { activeIndex, filesData, directory, loadedFile, newEntry } = this.state;
+    const {
+      activeIndex,
+      filesData,
+      directory,
+      loadedFile,
+      newEntry,
+      newEntryName
+    } = this.state;
+
     return (
       <AppWrap>
         <Header>Logger</Header>
@@ -112,11 +145,19 @@ class App extends Component {
             <Button
               onClick={() => this.setState({newEntry: !newEntry})}
             >+ New Entry</Button>
-            {newEntry &&
-              <form onSubmit={() => null}>
-                <input autoFocus type="text" />
+            {newEntry && (
+              <form onSubmit={this.newFile}>
+                <input
+                  value={newEntryName}
+                  onChange={e =>
+                    this.setState({
+                      newEntryName: e.target.value
+                    })
+                  }
+                  autoFocus type="text"
+                />
               </form>
-            }
+            )}
             {filesData.map((file, index) => (
               <FileButton
                 active={activeIndex === index}
