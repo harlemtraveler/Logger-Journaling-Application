@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Markdown from 'markdown-to-jsx';
 import AceEditor from 'react-ace';
 import styled from 'styled-components';
+import dateFns from 'date-fns';
 import brace from 'brace';
 import 'brace/mode/markdown';
 import 'brace/theme/dracula';
@@ -53,6 +54,16 @@ class App extends Component {
         };
       });
 
+      filesData.sort((a, b) => {
+        const aDate = new Date(a.date);
+        const bDate = new Date(b.date);
+        const aSec = aDate.getTime();
+        const bSec = bDate.getTime();
+        // the return will return the newest first, by subtracting 'a' from 'a'
+        // to get the oldest first, reverse the order, subtract 'b' from 'a'
+        return bSec - aSec;
+      });
+
       this.setState(
         {
           filesData
@@ -102,7 +113,8 @@ class App extends Component {
                 active={activeIndex === index}
                 onClick={this.changeFile(index)}
               >
-                {file.path}
+                <p className="title">{file.title}</p>
+                <p className="date">{formatDate(file.date)}</p>
               </FileButton>
             ))}
           </FilesWindow>
@@ -222,6 +234,7 @@ const FileButton = styled.button`
   opacity: 0.4;
   color: white;
   border: none;
+  text-align: left;
   border-bottom: solid 1px #302b3a;
   transition: 0.3s ease all;
   &:hover {
@@ -232,4 +245,16 @@ const FileButton = styled.button`
     opacity: 1;
     border-left: solid 4px #82d8d8;
   `}
+  .title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 0 0 5px;
+  }
+  .date {
+    margin: 0;
+  }
 `;
+
+// This will accept a date and through dateFns, format it to a string.
+// date-fns formats is similar to Moment's format
+const formatDate = date => dateFns.format(new Date(date), 'MMMM Do YYYY');
