@@ -1,4 +1,7 @@
-# This is a Text/File Editor Desktop Application built with ElectronJS
+# Logger
+### A Text/File Editor Desktop Application built with ElectronJS
+
+***********************************************************
 
 ## Application Overview
 
@@ -54,3 +57,36 @@ yarn electron
 ```
 
 You should automatically be navigated to your Desktop, where a new window displaying the app UI will populate!
+
+***********************************************************
+
+## Add React DevTools to your ElectronJS Application
+
+Installing React DevTools for your Electron Application is fairly simple.
+There are only two steps involved:
+
+1. Install the React DevTools library package.
+2. Require the package within the Application's native DevTools.
+
+### Install the _electron-react-devtools_ library via Terminal
+
+In Terminal, while in the root of the application, run the following command:
+
+```bash
+yarn add electron-react-devtools
+```
+
+After installation, start up the Electron app. Navigate to the app's interface
+and open up the native Google DevTools with the Keyboard shortcut _Cmd+Opt+I_
+(for Mac) or _Ctrl+Shift+I_ (for Windows).
+
+Now inside of the DevTools, open the console. Run the following line of code to
+make React DevTools available for the app:
+
+```bash
+require('electron-react-devtools').install();
+```
+
+To make React DevTools available in the app, you'll most likely have to run
+Step 2 each time after restarting the app. When I find a way to squash this bug,
+I'll post it here!
