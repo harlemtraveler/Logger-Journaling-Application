@@ -17,6 +17,7 @@ class App extends Component {
     loadedFile: '',
     filesData: [],
     activeIndex: 0,
+    newEntry: false,
     directory: settings.get('directory') || null
   }
   constructor() {
@@ -101,13 +102,21 @@ class App extends Component {
   };
 
   render() {
-    const { activeIndex, filesData, directory, loadedFile } = this.state;
+    const { activeIndex, filesData, directory, loadedFile, newEntry } = this.state;
     return (
       <AppWrap>
         <Header>Logger</Header>
         {directory ? (
         <Split>
           <FilesWindow>
+            <Button
+              onClick={() => this.setState({newEntry: !newEntry})}
+            >+ New Entry</Button>
+            {newEntry &&
+              <form onSubmit={() => null}>
+                <input autoFocus type="text" />
+              </form>
+            }
             {filesData.map((file, index) => (
               <FileButton
                 active={activeIndex === index}
@@ -255,6 +264,22 @@ const FileButton = styled.button`
   }
 `;
 
+const Button = styled.button`
+  background: transparent;
+  color: white;
+  display: block;
+  border: solid 1px #82d8d8;
+  border-radius: 4px;
+  margin: 1rem auto;
+  font-size: 1rem;
+  transition: 0.3 ease all;
+  padding: 5px 10px;
+  &:hover {
+    background: #82d8d8;
+    color: #191324;
+  }
+`;
+
+const formatDate = date => dateFns.format(new Date(date), 'MMMM Do YYYY');
 // This will accept a date and through dateFns, format it to a string.
 // date-fns formats is similar to Moment's format
-const formatDate = date => dateFns.format(new Date(date), 'MMMM Do YYYY');
