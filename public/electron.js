@@ -3,6 +3,12 @@ const {app, BrowserWindow, dialog, Menu} = require('electron')
 const fs = require('fs');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+
+const isDev = require('electron-is-dev');
+// This is a reference to the result of the "electron-is-dev" results (T or F).
+
+const path = require('path');
+
 let mainWindow
 
 function createWindow () {
@@ -14,7 +20,12 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:3000')
+  // If localhost not available, load "index.html" file in the "build" folder.
+  mainWindow.loadURL(
+    isDev
+      ? 'http://localhost:3000'
+      : `file://${path.join(__dirname, '../build/index.html')}`
+  );
 
 const template = [
   {

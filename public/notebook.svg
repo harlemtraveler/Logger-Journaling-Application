@@ -1,0 +1,22 @@
+
+<svg width="133px" height="155px" viewBox="0 0 133 155" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M15.5510564,11.0386737 L107.184868,11.0386737 C110.496845,11.0386737 113.181733,13.7157342 113.181733,17.0294697 L113.181733,134.644431 C113.181733,137.953056 110.49423,140.635227 107.184868,140.635227 L15.5510564,140.635227 L15.5510564,11.0386737 Z" id="path-1"></path>
+        <filter x="-6.1%" y="-3.1%" width="110.2%" height="107.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="-1" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Mac" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Book" transform="translate(4.000000, 0.000000)">
+            <g id="Rectangle-5" transform="translate(64.366395, 75.836950) rotate(-15.000000) translate(-64.366395, -75.836950) ">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#232E36" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <rect id="Rectangle-10" fill="#F54828" transform="translate(98.303981, 66.953411) rotate(-15.000000) translate(-98.303981, -66.953411) " x="95.4530665" y="0.250270958" width="5.70182977" height="133.40628" rx="2.85091489"></rect>
+        </g>
+    </g>
+</svg>
